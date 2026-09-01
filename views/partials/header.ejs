@@ -1,0 +1,47 @@
+<!-- Navbar -->
+<header class="navbar">
+    <div class="container nav-content">
+        <a href="/" class="brand">
+            <div class="brand-icon">S</div>
+            <div class="brand-text">
+                <h1>Sahayak <span>AI</span></h1>
+                <p>DISTRESS PREDICTION SYSTEM</p>
+            </div>
+        </a>
+
+        <!-- Desktop Nav Actions -->
+        <nav class="nav-actions desktop-only">
+            <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme" title="Toggle theme">
+                <span id="theme-icon">🌙</span>
+            </button>
+
+            <% if(isAuth) { %>
+                <p>Welcome, User!</p>
+            <% } %>
+        </nav>
+
+        <!-- Mobile Nav Controls (Theme Toggle + Hamburger) -->
+        <div class="mobile-controls mobile-only">
+            <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme" title="Toggle theme">
+                <span id="theme-icon">🌙</span>
+            </button>
+
+            <button id="hamburger-btn" class="hamburger-btn" aria-label="Open mobile menu" aria-expanded="false">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Slide-Down Drawer -->
+    <div id="mobile-drawer" class="mobile-drawer">
+        <nav class="mobile-nav-links">
+            <% if(isAuth) { %>
+                <a href="/user-settings" class="mobile-nav-link" onclick="closeMobileMenu()">Welcome, User!</a>
+            <% } %>
+            <!-- <a href="/login" class="btn btn-primary w-full" onclick="closeMobileMenu()">Access Portal →</a> -->
+        </nav>
+    </div>
+</header>
+

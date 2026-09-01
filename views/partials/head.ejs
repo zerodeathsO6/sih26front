@@ -1,0 +1,20 @@
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sahayak | Atrocity Victim Mental Health & Distress Monitoring</title>
+
+    <!-- Point to your configured public route -->
+    <link rel="stylesheet" href="/css/main.css" />
+    <% if (page=="dashboard" ) { %>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <% } %>
+            <!-- Dark light switch which would be in every file -->
+            <script>
+                // Configure the dark mode theme at first and then proceed with the rest of the execution
+                (function () {
+                    const savedTheme = localStorage.getItem("sahayak_theme");
+                    const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+                    document.documentElement.setAttribute("data-theme", savedTheme || (systemDark ? "dark" : "light"));
+                })();
+            </script>
+</head>

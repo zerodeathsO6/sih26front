@@ -1,0 +1,16 @@
+<!-- Footer -->
+<footer class="footer">
+  Sahayak AI • Atrocity Victim Mental Health & Distress Monitoring System • NHAA Support Portal
+</footer>
+
+<!-- event bus which checks and emits all events -->
+ <script src="/js/bus.js"></script>
+
+<!-- Common script imports -->
+<script src="/js/dlmswitch.js"></script>
+<script src="/js/hamburger.js"></script>
+<script src="/js/modal.js"></script>
+
+<% for (const script of scriptsToImport) { %>
+  <script src="<%= script %>"></script>
+<% } %>

@@ -1,0 +1,194 @@
+<!-- Full-Bleed Application Shell -->
+<main style="display: flex; height: calc(100vh - 68px); width: 100vw; overflow: hidden; background-color: var(--bg-app);">
+
+  <!-- ============================================================
+       1. FLUSH COLLAPSIBLE SIDEBAR
+       ============================================================ -->
+  <aside id="app-sidebar" style="width: 280px; min-width: 280px; max-width: 280px; height: 100%; background-color: var(--bg-surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; transition: margin-left 0.25s ease, opacity 0.2s ease; position: relative; z-index: 10;">
+    
+    <!-- VIEW A: Main Navigation Menu -->
+    <div id="sidebar-view-menu" style="display: flex; flex-direction: column; flex: 1; overflow: hidden;">
+      <div style="padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <span class="metric-tag">Portal Navigation</span>
+          <h3 style="font-size: 1rem; font-weight: 800; color: var(--text-main); margin-top: 2px;">Sahayak AI</h3>
+        </div>
+        <button id="btn-collapse-sidebar" class="btn btn-outline" title="Collapse Sidebar" style="padding: 4px 8px; font-size: 0.8rem; border-radius: var(--radius-sm);">
+          ◀
+        </button>
+      </div>
+
+      <nav style="flex: 1; overflow-y: auto; padding: 14px 12px; display: flex; flex-direction: column; gap: 6px;">
+        <button class="nav-item-btn btn btn-outline" data-target="view-dashboard" style="justify-content: flex-start; width: 100%; padding: 10px 12px; font-weight: 700; gap: 10px;">
+          <span>📊</span> Dashboard Overview
+        </button>
+        
+        <button class="nav-item-btn btn btn-primary" data-target="view-chats" style="justify-content: flex-start; width: 100%; padding: 10px 12px; font-weight: 700; gap: 10px;">
+          <span>💬</span> Conversations & Logs
+        </button>
+        
+        <!-- <button class="nav-item-btn btn btn-outline" data-target="view-telemetry" style="justify-content: flex-start; width: 100%; padding: 10px 12px; font-weight: 700; gap: 10px;">
+          <span>📈</span> Distress Telemetry
+        </button>
+        
+        <button class="nav-item-btn btn btn-outline" data-target="view-directory" style="justify-content: flex-start; width: 100%; padding: 10px 12px; font-weight: 700; gap: 10px;">
+          <span>🛡️</span> Support Directory
+        </button> -->
+      </nav>
+    </div>
+
+    <!-- VIEW B: Conversations Manager (Nested Chat History) -->
+    <div id="sidebar-view-chats" style="display: none; flex-direction: column; flex: 1; overflow: hidden;">
+      <div style="padding: 14px 16px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <button id="btn-back-to-menu" class="btn btn-outline" style="padding: 4px 8px; font-size: 0.75rem;">
+            ← Menu
+          </button>
+          <button id="btn-new-chat" class="btn btn-primary" style="padding: 5px 10px; font-size: 0.75rem;">
+            + New Chat
+          </button>
+        </div>
+        <input 
+          type="text" 
+          id="chat-search-input" 
+          placeholder="Search logs..." 
+          style="width: 100%; padding: 7px 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background-color: var(--bg-subtle); color: var(--text-main); font-family: inherit; font-size: 0.8rem; outline: none;"
+        />
+      </div>
+
+      <div id="chat-list-container" style="flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 6px;">
+        <!-- Populated dynamically by dashboard.js -->
+      </div>
+    </div>
+
+    <!-- FIXED FLUSH HELPLINE -->
+    <div style="padding: 14px 16px; border-top: 1px solid var(--border); background-color: var(--bg-subtle); flex-shrink: 0; display: flex; flex-direction: column; gap: 3px;">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <span style="font-size: 0.65rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: var(--danger);">Emergency Hotline</span>
+        <span class="pulsing-dot" style="background-color: var(--danger);"></span>
+      </div>
+      <a href="tel:112" style="font-size: 0.85rem; font-weight: 800; color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 6px;">
+        📞 112 / 1800-SAHAYAK
+      </a>
+    </div>
+  </aside>
+
+  <!-- ============================================================
+       2. EXPANDABLE MAIN CONTENT AREA (100% Flex Fill)
+       ============================================================ -->
+  <section style="flex: 1; height: 100%; display: flex; flex-direction: column; overflow: hidden; background-color: var(--bg-app); position: relative;">
+
+    <!-- PANEL 1: CONVERSATIONS & CHATS -->
+    <div id="view-chats" class="main-panel" style="flex: 1; display: flex; flex-direction: column; height: 100%; overflow: hidden;">
+      
+      <!-- Top Action Bar -->
+      <div style="height: 56px; padding-inline: 20px; border-bottom: 1px solid var(--border); background-color: var(--bg-surface); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <!-- Expand button (visible when sidebar is collapsed) -->
+          <button id="btn-expand-sidebar" class="btn btn-outline" title="Expand Sidebar" style="display: none; padding: 4px 8px; font-size: 0.8rem;">
+            ▶
+          </button>
+          <button id="btn-toggle-chat-list" class="btn btn-outline" style="padding: 5px 10px; font-size: 0.75rem;">
+            📁 History
+          </button>
+          <div>
+            <h3 id="current-chat-title" style="font-size: 0.95rem; font-weight: 800; color: var(--text-main); margin: 0;">Initial Intake Session</h3>
+            <span id="current-chat-status" style="font-size: 0.7rem; color: var(--text-muted);">Active Local Storage Session</span>
+          </div>
+        </div>
+        <button id="btn-export-chat" class="btn btn-outline" style="padding: 5px 12px; font-size: 0.75rem;">Export JSON</button>
+      </div>
+
+      <!-- Messages Feed -->
+      <div id="chat-messages-container" style="flex: 1; overflow-y: auto; padding: 24px 32px; display: flex; flex-direction: column; gap: 16px;">
+        <!-- Hydrated dynamically -->
+      </div>
+
+      <!-- Bottom Chat Bar -->
+      <div style="padding: 16px 24px; border-top: 1px solid var(--border); background-color: var(--bg-surface); flex-shrink: 0;">
+        <form onsubmit="return false;" style="display: flex; gap: 12px; align-items: center; max-width: 1200px; margin-inline: auto;">
+          <input 
+            type="text" 
+            id="chat-message-input" 
+            placeholder="Type a message or paste case telemetry... (Shift + Enter to send)" 
+            style="flex: 1; padding: 12px 18px; border-radius: var(--radius-sm); border: 1px solid var(--border); background-color: var(--bg-subtle); color: var(--text-main); font-family: inherit; font-size: 0.9rem; outline: none;"
+          />
+          <button type="button" id="btn-send-message" class="btn btn-primary" style="padding: 12px 24px; font-weight: 700;">
+            Send
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- PANEL 2: DASHBOARD OVERVIEW -->
+    <div id="view-dashboard" class="main-panel" style="flex: 1; display: none; flex-direction: column; height: 100%; overflow-y: auto; padding: 32px 40px; gap: 24px;">
+      <div>
+        <span class="metric-tag">System Overview</span>
+        <h2 style="font-size: 1.5rem; font-weight: 800; margin-top: 4px;">Operational Telemetry & Case Triage</h2>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+        <div class="metric-card">
+          <span class="metric-tag">Total Logs</span>
+          <h3 style="font-size: 1.6rem; margin-top: 4px;">124</h3>
+          <p>Active monitored records</p>
+        </div>
+        <div class="metric-card">
+          <span class="metric-tag" style="color: var(--danger);">Critical Tiers</span>
+          <h3 style="font-size: 1.6rem; margin-top: 4px; color: var(--danger);">12</h3>
+          <p>Immediate intervention</p>
+        </div>
+        <div class="metric-card">
+          <span class="metric-tag" style="color: var(--warning);">Pending Review</span>
+          <h3 style="font-size: 1.6rem; margin-top: 4px;">18</h3>
+          <p>Awaiting assignment</p>
+        </div>
+        <div class="metric-card">
+          <span class="metric-tag">Resolved</span>
+          <h3 style="font-size: 1.6rem; margin-top: 4px;">94</h3>
+          <p>Stabilized cases</p>
+        </div>
+      </div>
+
+      <div style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 24px; min-height: 320px;">
+        <h4 style="font-size: 0.9rem; font-weight: 700; margin-bottom: 12px;">Weekly Distress Escalation Trends</h4>
+        <div style="height: 250px;"><canvas id="dashboardOverviewChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- PANEL 3: DISTRESS TELEMETRY -->
+    <div id="view-telemetry" class="main-panel" style="flex: 1; display: none; flex-direction: column; height: 100%; overflow-y: auto; padding: 32px 40px; gap: 24px;">
+      <div>
+        <span class="metric-tag">Real-Time Analytics</span>
+        <h2 style="font-size: 1.5rem; font-weight: 800; margin-top: 4px;">Distress Prediction Telemetry</h2>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+        <div style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 20px; height: 340px;">
+          <h4 style="font-size: 0.9rem; font-weight: 700; margin-bottom: 12px;">Multi-Modal Distress Indices (Last 30 Days)</h4>
+          <div style="height: 260px;"><canvas id="telemetryLineChart"></canvas></div>
+        </div>
+        <div style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 20px; height: 340px;">
+          <h4 style="font-size: 0.9rem; font-weight: 700; margin-bottom: 12px;">Severity Breakdown</h4>
+          <div style="height: 250px;"><canvas id="telemetryDoughnutChart"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL 4: SUPPORT DIRECTORY -->
+    <div id="view-directory" class="main-panel" style="flex: 1; display: none; flex-direction: column; height: 100%; overflow-y: auto; padding: 32px 40px; gap: 16px;">
+      <div>
+        <span class="metric-tag">Resource Network</span>
+        <h2 style="font-size: 1.5rem; font-weight: 800; margin-top: 4px;">Emergency & Medical Directory</h2>
+      </div>
+      <div class="metric-card" style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <h4 style="font-size: 0.95rem; font-weight: 700;">National Human Rights Legal Cell</h4>
+          <p>Specialized legal aid & fast-track representation</p>
+        </div>
+        <a href="tel:1800111111" class="btn btn-outline" style="font-size: 0.8rem;">Call Unit</a>
+      </div>
+    </div>
+
+  </section>
+</main>
